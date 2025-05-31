@@ -2,6 +2,7 @@ import React from 'react';
 import Carousel from 'react-elastic-carousel';
 import { Helmet } from 'react-helmet';
 // import parse from 'html-react-parser';
+import { Redirect } from 'react-router-dom';
 
 import {
   Box,
@@ -13,6 +14,7 @@ import {
   Skeleton,
   useColorMode,
   Button,
+  Spinner
 } from '@chakra-ui/core';
 import { useLocation, Link, useParams } from 'react-router-dom';
 
@@ -30,18 +32,35 @@ function SingleBlog({ getArticle }) {
 
   const bg = { light: '#f5f2ef', dark: '#1a202c' };
   const color = { light: 'black', dark: 'white' };
-  const [loaded, setLoaded] = React.useState(false);
+const [loaded, setLoaded] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [notFound, setNotFound] = React.useState(false);
+
   const imageLoaded = () => {
     setLoaded(true);
   };
+
   let { id } = useParams('id');
   const [data, setData] = React.useState(null);
+
   React.useEffect(() => {
     async function getData() {
-      const res = await getArticle(id);
-      console.log(res);
-      if (res) {
-        setData(res.data);
+      setLoading(true);
+      setNotFound(false);
+
+      try {
+        const res = await getArticle(id);
+        console.log(res);
+        if (res && res.data) {
+          setData(res.data);
+        } else {
+          setNotFound(true);
+        }
+      } catch (error) {
+        console.error('Error fetching article:', error);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
       }
     }
     getData();
@@ -59,6 +78,25 @@ function SingleBlog({ getArticle }) {
     { width: 850, itemsToShow: 4, itemsToScroll: 4 },
     { width: 1150, itemsToShow: 4, itemsToScroll: 4 },
   ];
+
+
+  // Loading state
+  if (loading) {
+    return (
+      <Box mt={{ base: '2em', md: '6em' }}>
+        <Box mb="2em">
+          <Box textAlign="center">
+            <Spinner size="xl" />
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
+
+  // Not found state
+  if (notFound || !data) {
+        return <Redirect to="/404" replace />;
+  }
   return (
     <Box mt="100px">
       {data && (
@@ -360,7 +398,7 @@ function SingleBlog({ getArticle }) {
                       bg="white"
                       // p="2"
                       pb="4"
-                      m="4"
+                      // m="4"
                       w={['100', '100', '100', '100', '355px']}
                       m="0 auto"
                       shadow="lg"

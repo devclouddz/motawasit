@@ -281,7 +281,7 @@ export default function Footer() {
         </Flex>
       </SimpleGrid>
       <Flex mb="50px" justifyContent="center">
-        <Box dir="ltr">©️ 2021 Almutawassit Books</Box>
+        <Box dir="ltr">©️ {new Date().getFullYear()} Almutawassit Books</Box>
       </Flex>
     </Box>
   );

@@ -29,7 +29,7 @@ import {
   AccordionPanel,
 } from '@chakra-ui/core';
 import Carousel from 'react-elastic-carousel';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { getBook } from '../redux/actions/booksActions';
@@ -46,18 +46,32 @@ function Book({ getBook }) {
   let { id } = useParams();
   const [data, setData] = React.useState(null);
   const [loaded, setLoaded] = React.useState(false);
+  const [shouldRedirect, setShouldRedirect] = React.useState(false); // Add this state
+
   const imageLoaded = () => {
     setLoaded(true);
   };
+
   React.useEffect(() => {
     async function getData() {
       const res = await getBook(id);
-      if (res) {
+      console.log(res)
+      console.log(res.status)
+      console.log(res?.status === 404)
+      if (res?.data) {
         setData(res.data);
+        console.log('book data', res.data);
+      } else if (res?.status === 404) {
+        setShouldRedirect(true); // Set redirect state instead of returning JSX
       }
     }
     getData();
   }, [id]);
+
+  // Handle redirect at the component level
+  if (shouldRedirect) {
+    return <Redirect to="/404" replace />;
+  }
 
   console.log(data);
 
@@ -73,6 +87,7 @@ function Book({ getBook }) {
     { width: 850, itemsToShow: 4, itemsToScroll: 4 },
     { width: 1150, itemsToShow: 4, itemsToScroll: 4 },
   ];
+
   return (
     <Box mt={{ base: '2em', md: '6em' }}>
       <Box mb="2em">
@@ -95,7 +110,7 @@ function Book({ getBook }) {
                 <Box>
                   <Skeleton isLoaded={loaded}>
                     <Image
-                      laading="lazy"
+                      loading="lazy"
                       onLoad={imageLoaded}
                       shadow="lg"
                       mx="auto"
@@ -106,6 +121,7 @@ function Book({ getBook }) {
                 <Flex direction="column" align="center" py="1.5em">
                   <a
                     target="_blank"
+                    rel="noreferrer"
                     href={`${process.env.REACT_APP_SHOP}/book/${data.id}`}
                     style={{ width: '100%' }}
                   >
@@ -130,7 +146,7 @@ function Book({ getBook }) {
                           width="100%"
                           height="100"
                           scrolling="no"
-                          frameborder="no"
+                          frameBorder="no"
                           allow="autoplay"
                           src={data.podcast}
                         ></iframe>
@@ -196,25 +212,32 @@ function Book({ getBook }) {
                 {breakPointMd && (
                   <Tabs>
                     <TabList className="booktablist">
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        عن الكتاب
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        عن المؤلف
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        فهرس الكتاب
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        من الكتاب
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        في الصحافة
-                      </Tab>
+                      {data.description && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          عن الكتاب
+                        </Tab>
+                      )}
+                      {data.author && data.author.length > 0 && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          عن المؤلف
+                        </Tab>
+                      )}
+                      {data.index && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          فهرس الكتاب
+                        </Tab>
+                      )}
+                      {data.from_book && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          من الكتاب
+                        </Tab>
+                      )}
+                      {data.press_external_link && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          في الصحافة
+                        </Tab>
+                      )}
+                      {/* This tab always shows since it contains basic book info */}
                       <Tab whiteSpace="nowrap" fontSize="18px">
                         معلومات الكتاب
                       </Tab>
@@ -233,7 +256,7 @@ function Book({ getBook }) {
                           />
                         </TabPanel>
                       )}
-                      {data.author && (
+                      {data.author && data.author.length > 0 && (
                         <TabPanel>
                           {data.author.map(author => (
                             <Box key={author.id}>
@@ -276,6 +299,7 @@ function Book({ getBook }) {
                           />
                         </TabPanel>
                       )}
+                      {/* This panel always shows */}
                       <TabPanel fontSize="xl">
                         <List mt="4">
                           <ListItem>الناشر : {data.publisher} </ListItem>
@@ -327,7 +351,7 @@ function Book({ getBook }) {
                         </AccordionPanel>
                       </AccordionItem>
                     )}
-                    {data.author && (
+                    {data.author && data.author.length > 0 && (
                       <AccordionItem>
                         <AccordionButton
                           bg="#000"
@@ -418,6 +442,7 @@ function Book({ getBook }) {
                         </AccordionPanel>
                       </AccordionItem>
                     )}
+                    {/* This accordion item always shows */}
                     <AccordionItem>
                       <AccordionButton
                         bg="#000"
@@ -489,8 +514,8 @@ function Book({ getBook }) {
 
                 paddingBottom: 10,
               }}
-              //   itemsToScroll={3}
-              //   itemsToShow={3}
+            //   itemsToScroll={3}
+            //   itemsToShow={3}
             >
               {data.books.map(book => (
                 <a key={book.id} href={`/book/${book.id}`}>
@@ -548,8 +573,8 @@ function Book({ getBook }) {
 
                 paddingBottom: 10,
               }}
-              //   itemsToScroll={3}
-              //   itemsToShow={3}
+            //   itemsToScroll={3}
+            //   itemsToShow={3}
             >
               {data.articles.map(article => (
                 <Link to={`/singlePost/${article.id}`} key={article.id}>
