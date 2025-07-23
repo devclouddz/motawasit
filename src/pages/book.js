@@ -1,6 +1,5 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-
 import {
   Box,
   Heading,
@@ -8,7 +7,6 @@ import {
   Image,
   Divider,
   Button,
-  Grid,
   Tabs,
   TabList,
   TabPanels,
@@ -29,7 +27,7 @@ import {
   AccordionPanel,
 } from '@chakra-ui/core';
 import Carousel from 'react-elastic-carousel';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { getBook } from '../redux/actions/booksActions';
@@ -37,10 +35,10 @@ import { getBook } from '../redux/actions/booksActions';
 import GlobalShare from '../util/GlobalShare';
 import BooksFilter from '../components/books/BooksFilter';
 
-
 function Book({ getBook }) {
   const { colorMode } = useColorMode();
   const breakPointMd = useBreakpointValue({ base: false, md: true });
+  const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
   const bg = { light: '#f5f2ef', dark: '#1a202c' };
   const color = { light: 'black', dark: 'white' };
@@ -48,21 +46,27 @@ function Book({ getBook }) {
   let { id } = useParams();
   const [data, setData] = React.useState(null);
   const [loaded, setLoaded] = React.useState(false);
-  const isSmallScreen = useBreakpointValue({ base: true, md: false });
+  const [shouldRedirect, setShouldRedirect] = React.useState(false);
+
   const imageLoaded = () => {
     setLoaded(true);
   };
+
   React.useEffect(() => {
     async function getData() {
       const res = await getBook(id);
-      if (res) {
+      if (res?.data) {
         setData(res.data);
+      } else if (res?.status === 404) {
+        setShouldRedirect(true);
       }
     }
     getData();
-  }, [id]);
+  }, [id, getBook]);
 
-  console.log(data);
+  if (shouldRedirect) {
+    return <Redirect to="/404" replace />;
+  }
 
   const breakPoints = [
     { width: 1, itemsToShow: 1 },
@@ -70,45 +74,51 @@ function Book({ getBook }) {
     { width: 850, itemsToShow: 3 },
     { width: 1900, itemsToShow: 4 },
   ];
+
   const bookBreakPoints = [
     { width: 1, itemsToShow: 1 },
     { width: 550, itemsToShow: 2, itemsToScroll: 2, pagination: false },
     { width: 850, itemsToShow: 4, itemsToScroll: 4 },
     { width: 1150, itemsToShow: 4, itemsToScroll: 4 },
   ];
+
   return (
     <Box mt={{ base: '2em', md: '6em' }}>
       <Box mb="2em">
-      <Box
-        position={isSmallScreen ? 'static' : 'fixed'}
-        top="70px"  // You can adjust this value to control where the filter starts
-        zIndex="10"
-        width="full"
-      >
-        <BooksFilter />
-      </Box>
+        {/* Fixed Books Filter */}
+        <Box
+          position={isSmallScreen ? 'static' : 'fixed'}
+          top="70px"
+          zIndex="10"
+          width="full"
+        >
+          <BooksFilter />
+        </Box>
 
         {!data && (
           <Box textAlign="center">
             <Spinner size="xl" />
           </Box>
         )}
+
         {data && (
           <>
             <Helmet>
               <title>{data.title}</title>
             </Helmet>
+
             <Flex
               direction={['column', 'column', 'column', 'row']}
               px={['2%', '2%', '5%', '5%']}
               gap="10px"
-              mt='10em'
+              mt={isSmallScreen ? '0' : '10em'}
             >
+              {/* Book Cover and Actions */}
               <Box w={{ base: '100%', lg: '30%' }} maxW="400px" mx="auto">
                 <Box>
                   <Skeleton isLoaded={loaded}>
                     <Image
-                      laading="lazy"
+                      loading="lazy"
                       onLoad={imageLoaded}
                       shadow="lg"
                       mx="auto"
@@ -116,9 +126,11 @@ function Book({ getBook }) {
                     />
                   </Skeleton>
                 </Box>
+
                 <Flex direction="column" align="center" py="1.5em">
                   <a
                     target="_blank"
+                    rel="noreferrer"
                     href={`${process.env.REACT_APP_SHOP}/book/${data.id}`}
                     style={{ width: '100%' }}
                   >
@@ -132,9 +144,11 @@ function Book({ getBook }) {
                       لشراء الكتاب المس هنا
                     </Button>
                   </a>
+
                   <Box mt="4" w="90%">
                     <GlobalShare />
                   </Box>
+
                   <Box w={['300px', '300px', '400px', '400px']}>
                     {data.podcast && (
                       <Box>
@@ -143,7 +157,7 @@ function Book({ getBook }) {
                           width="100%"
                           height="100"
                           scrolling="no"
-                          frameborder="no"
+                          frameBorder="no"
                           allow="autoplay"
                           src={data.podcast}
                         ></iframe>
@@ -161,6 +175,8 @@ function Book({ getBook }) {
                   </Box>
                 </Flex>
               </Box>
+
+              {/* Book Details */}
               <Box
                 w={{ base: '100%', lg: '70%' }}
                 mr={{ base: '0', lg: '1.5em' }}
@@ -206,28 +222,36 @@ function Book({ getBook }) {
                   />
                   <Divider />
                 </Box>
+
+                {/* Desktop Tabs */}
                 {breakPointMd && (
                   <Tabs>
                     <TabList className="booktablist">
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        عن الكتاب
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        عن المؤلف
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        فهرس الكتاب
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        من الكتاب
-                      </Tab>
-                      <Tab whiteSpace="nowrap" fontSize="18px">
-                        {' '}
-                        في الصحافة
-                      </Tab>
+                      {data.description && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          عن الكتاب
+                        </Tab>
+                      )}
+                      {data.author && data.author.length > 0 && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          عن المؤلف
+                        </Tab>
+                      )}
+                      {data.index && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          فهرس الكتاب
+                        </Tab>
+                      )}
+                      {data.from_book && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          من الكتاب
+                        </Tab>
+                      )}
+                      {data.press_external_link && (
+                        <Tab whiteSpace="nowrap" fontSize="18px">
+                          في الصحافة
+                        </Tab>
+                      )}
                       <Tab whiteSpace="nowrap" fontSize="18px">
                         معلومات الكتاب
                       </Tab>
@@ -246,17 +270,19 @@ function Book({ getBook }) {
                           />
                         </TabPanel>
                       )}
-                      {data.author && (
-  <TabPanel>
-    {data.author.map(author => (
-      <Box key={author.id}>
-        <Heading size="lg">{author.name}</Heading>
-        <Box m="2" fontSize="2xl" dangerouslySetInnerHTML={{ __html: author.author_bio }} />
-      </Box>
-    ))}
-  </TabPanel>
-)}
-
+                      {data.author && data.author.length > 0 && (
+                        <TabPanel>
+                          {data.author.map(author => (
+                            <Box key={author.id}>
+                              <Heading size="lg">{author.name}</Heading>
+                              <Box
+                                m="2"
+                                fontSize="2xl"
+                                dangerouslySetInnerHTML={{ __html: author.author_bio }}
+                              />
+                            </Box>
+                          ))}
+                        </TabPanel>
                       )}
                       {data.index && (
                         <TabPanel fontSize="xl">
@@ -298,7 +324,7 @@ function Book({ getBook }) {
                           </ListItem>
                           <ListItem>عدد الصفحات : {data.page_number} </ListItem>
                           <ListItem dir="ltr"> {data.isbn} : ISBN </ListItem>
-                          {/*<ListItem>السعر : {data.price}€</ListItem>*/}
+                          <ListItem>السعر : {data.price}€</ListItem>
                           <ListItem>
                             هاشتاغ :{' '}
                             <Box
@@ -314,6 +340,8 @@ function Book({ getBook }) {
                     </TabPanels>
                   </Tabs>
                 )}
+
+                {/* Mobile Accordion */}
                 {!breakPointMd && (
                   <Accordion allowToggle allowMultiple={true}>
                     {data.description && (
@@ -340,7 +368,7 @@ function Book({ getBook }) {
                         </AccordionPanel>
                       </AccordionItem>
                     )}
-                    {data.author && (
+                    {data.author && data.author.length > 0 && (
                       <AccordionItem>
                         <AccordionButton
                           bg="#000"
@@ -356,9 +384,11 @@ function Book({ getBook }) {
                           {data.author.map(author => (
                             <Box key={author.id}>
                               <Heading size="lg">{author.name}</Heading>
-                              <Text m="2" fontSize="2xl">
-                                {author.author_bio}
-                              </Text>
+                              <Box
+                                m="2"
+                                fontSize="2xl"
+                                dangerouslySetInnerHTML={{ __html: author.author_bio }}
+                              />
                             </Box>
                           ))}
                         </AccordionPanel>
@@ -451,7 +481,7 @@ function Book({ getBook }) {
                           </ListItem>
                           <ListItem>عدد الصفحات : {data.page_number} </ListItem>
                           <ListItem dir="ltr"> {data.isbn} : ISBN </ListItem>
-                          {/*<ListItem>السعر : {data.price}€</ListItem>*/}
+                          <ListItem>السعر : {data.price}€</ListItem>
                           <ListItem>
                             هاشتاغ :{' '}
                             <Box
@@ -471,20 +501,16 @@ function Book({ getBook }) {
             </Flex>
           </>
         )}
+
+        {/* Related Books */}
         {data && data.books[0] && (
           <Box
             pr="7%"
             pl="3%"
-            // bg={bg[colorMode]}
             bg="black"
             borderBottom="1px solid white"
           >
-            <Box
-              mt="100px"
-              mb="4"
-              // color={color[colorMode]}
-              color="white"
-            >
+            <Box mt="100px" mb="4" color="white">
               <Heading
                 fontFamily="diodrum-med !important"
                 mr="7%"
@@ -497,13 +523,7 @@ function Book({ getBook }) {
             <Carousel
               breakPoints={bookBreakPoints}
               isRTL={true}
-              style={{
-                //   marginTop: 100,
-
-                paddingBottom: 10,
-              }}
-              //   itemsToScroll={3}
-              //   itemsToShow={3}
+              style={{ paddingBottom: 10 }}
             >
               {data.books.map(book => (
                 <a key={book.id} href={`/book/${book.id}`}>
@@ -527,7 +547,6 @@ function Book({ getBook }) {
                       </Text>
                       <Text fontSize="md">{book.sub_title}</Text>
                       <Text fontSize="sm">{book.author}</Text>
-                      {/* <Text fontWeight="bold">€{book.price}</Text> */}
                     </Box>
                   </Box>
                 </a>
@@ -535,6 +554,8 @@ function Book({ getBook }) {
             </Carousel>
           </Box>
         )}
+
+        {/* Related Articles */}
         {data && data.articles[0] && (
           <Box
             pr="5%"
@@ -556,13 +577,7 @@ function Book({ getBook }) {
             <Carousel
               breakPoints={breakPoints}
               isRTL={true}
-              style={{
-                //   marginTop: 100,
-
-                paddingBottom: 10,
-              }}
-              //   itemsToScroll={3}
-              //   itemsToShow={3}
+              style={{ paddingBottom: 10 }}
             >
               {data.articles.map(article => (
                 <Link to={`/singlePost/${article.id}`} key={article.id}>
@@ -579,7 +594,6 @@ function Book({ getBook }) {
                         <Image
                           loading="lazy"
                           w="100%"
-                          //   h="200px"
                           onLoad={imageLoaded}
                           src={`${process.env.REACT_APP_STORAGE}/${article.image}`}
                         />
@@ -590,8 +604,7 @@ function Book({ getBook }) {
                         fontSize="lg"
                         fontFamily="diodrum-med !important"
                       >
-                        {' '}
-                        {article.author}{' '}
+                        {article.author}
                       </Text>
                       <Heading
                         fontFamily="diodrum-med !important"

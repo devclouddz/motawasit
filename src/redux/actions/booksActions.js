@@ -67,6 +67,6 @@ export const getBook = id => async (dispatch, getState) => {
     .then(res => {
       return res;
     })
-    .catch(err => {});
+    .catch(err => { return err });
   return data;
 };
