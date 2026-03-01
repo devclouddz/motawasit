@@ -76,7 +76,7 @@ export default function Navbar(props) {
         align="center"
         justify="space-between"
         wrap="wrap"
-        padding="0.5rem"
+        padding={{ base: '0.3rem', md: '0.5rem' }}
         borderTop="1px solid white"
         //   shadow="lg"
         color={color[colorMode]}
@@ -94,7 +94,7 @@ export default function Navbar(props) {
             >
               <Image
                 loading="lazy"
-                w="220px"
+                w={{ base: '150px', md: '220px' }}
                 className="main-logo"
                 src={logo}
               ></Image>
@@ -167,7 +167,7 @@ export default function Navbar(props) {
               <Flex
                 alignItems="center"
                 p="4"
-                h="400px"
+                h={{ base: 'auto', md: '400px' }}
                 flexWrap="wrap"
                 direction="column"
               >

@@ -88,11 +88,10 @@ function Navbar({ getSeries, getCat }) {
       as="nav"
       align="center"
       bg={bg[colorMode]}
-      overflowX={{ base: 'auto', sm: 'auto' }}
+      overflowX={{ base: 'hidden', md: 'auto' }}
       wrap={['nowrap', 'nowrap', 'wrap', 'wrap']}
-      direction={['row', 'row', 'row', 'row']} 
-      // justifyContent="center" // Centering the items
-
+      direction={['row', 'row', 'row', 'row']}
+      minH={{ base: '50px', md: 'auto' }}
     >
       {!isLargerThan790 && (
         <IconButton

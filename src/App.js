@@ -1,5 +1,5 @@
 import React from 'react';
-import { CSSReset, useBreakpointValue } from '@chakra-ui/core';
+import { CSSReset, useBreakpointValue, Box } from '@chakra-ui/core';
 import { Switch, Route } from 'react-router-dom';
 import nprogress from 'nprogress';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
@@ -201,21 +201,17 @@ function App(props) {
         </Switch>
         <Up></Up>
         {isSmallScreen && (
-            <Headroom
-                className="navbar"
+            <Box
                 style={{
                   position: 'fixed',
                   bottom: '0',
-                  top: 'unset',
                   left: '0',
                   right: '0',
-                  zIndex: '1',
-                  transform: 'translate3d(0px, 0px, 0px)',
-                  transition: 'all .5s ease-in-out 0s',
+                  zIndex: '99',
                 }}
             >
               <Navbar />
-            </Headroom>
+            </Box>
         )}
         {!isSmallScreen && <Navbar />}
         <Footer></Footer>

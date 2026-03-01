@@ -50,19 +50,19 @@ function Navbar({ getSearch, searchResults, isLoading }) {
 
   return (
     <Flex
-    h="70px"
+    h={{ base: '60px', md: '70px' }}
     className={navClassName}
     borderBottom="1px solid #ddd"
     as="nav"
     align="center"
     justify="space-between"
     wrap="wrap"
-    padding="0.5rem"
+    padding={{ base: '0.3rem', md: '0.5rem' }}
     color={color[colorMode]}
     bg={bg[colorMode]}
   >
     <Box
-      ml="8%"
+      ml={{ base: '2%', md: '8%' }}
       d="flex"
       alignItems="center"
       justifyContent="flex-end"

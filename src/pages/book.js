@@ -87,8 +87,8 @@ function Book({ getBook }) {
       <Box mb="2em">
         {/* Fixed Books Filter */}
         <Box
-          position={isSmallScreen ? 'static' : 'fixed'}
-          top="70px"
+          position="fixed"
+          top={isSmallScreen ? '0' : '70px'}
           zIndex="10"
           width="full"
         >
@@ -111,10 +111,10 @@ function Book({ getBook }) {
               direction={['column', 'column', 'column', 'row']}
               px={['2%', '2%', '5%', '5%']}
               gap="10px"
-              mt={isSmallScreen ? '0' : '10em'}
+              mt={isSmallScreen ? '1em' : '10em'}
             >
               {/* Book Cover and Actions */}
-              <Box w={{ base: '100%', lg: '30%' }} maxW="400px" mx="auto">
+              <Box w={{ base: '100%', lg: '30%' }} maxW={{ base: '280px', md: '400px' }} mx="auto">
                 <Box>
                   <Skeleton isLoaded={loaded}>
                     <Image
@@ -149,7 +149,7 @@ function Book({ getBook }) {
                     <GlobalShare />
                   </Box>
 
-                  <Box w={['300px', '300px', '400px', '400px']}>
+                  <Box w={['100%', '100%', '400px', '400px']}>
                     {data.podcast && (
                       <Box>
                         <iframe
@@ -510,7 +510,7 @@ function Book({ getBook }) {
             bg="black"
             borderBottom="1px solid white"
           >
-            <Box mt="100px" mb="4" color="white">
+            <Box mt={{ base: '2em', md: '100px' }} mb="4" color="white">
               <Heading
                 fontFamily="diodrum-med !important"
                 mr="7%"
@@ -527,11 +527,11 @@ function Book({ getBook }) {
             >
               {data.books.map(book => (
                 <a key={book.id} href={`/book/${book.id}`}>
-                  <Box w="350px" mb="4" cursor="pointer">
+                  <Box w={{ base: '200px', md: '350px' }} mb="4" cursor="pointer">
                     <Image
                       loading="lazy"
-                      w="225px"
-                      h="350px"
+                      w={{ base: '150px', md: '225px' }}
+                      h={{ base: '230px', md: '350px' }}
                       m="0 auto"
                       shadow="lg"
                       src={`${process.env.REACT_APP_STORAGE}/${book.cover}`}
@@ -583,7 +583,7 @@ function Book({ getBook }) {
                 <Link to={`/singlePost/${article.id}`} key={article.id}>
                   <Box
                     bg="white"
-                    maxW="300px"
+                    maxW={{ base: '250px', md: '300px' }}
                     shadow="lg"
                     pb="4"
                     m={{ base: '1', md: '4' }}

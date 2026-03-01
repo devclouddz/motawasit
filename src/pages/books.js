@@ -28,8 +28,8 @@ function Home({ getBooks }) {
         <title>كتب المتوسط</title>
       </Helmet>
       <Box
-        position={isSmallScreen ? 'static' : 'fixed'}
-        top="70px"  // You can adjust this value to control where the filter starts
+        position="fixed"
+        top={isSmallScreen ? '0' : '70px'}
         zIndex="10"
         width="full"
       >
@@ -37,10 +37,10 @@ function Home({ getBooks }) {
       </Box>
 
       <Box
-        pr={['10%', '5%', '5%', '5%']}
-        pl={['10%', '5%', '5%', '5%']}
-        mb="100px"
-        mt="150px"
+        pr={['3%', '5%', '5%', '5%']}
+        pl={['3%', '5%', '5%', '5%']}
+        mb={{ base: '4em', md: '100px' }}
+        mt={{ base: '60px', md: '150px' }}
       >
         <CatBooks translate={translate} />
       </Box>

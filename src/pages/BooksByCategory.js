@@ -29,27 +29,19 @@ export default function Books() {
       <Helmet>
         <title>{category}</title>
       </Helmet>
-      {isSmallScreen && (
-        <Headroom
-          className="book-filter"
-          style={{
-            top: '70px',
-            left: '0px',
-            right: '0px',
-            zIndex: '1',
-            transform: 'translate3D(0px, 0px, 0px)',
-            transition: 'all .5s ease-in-out 0s',
-          }}
-        >
-          
-          <BooksFilter />
-        </Headroom>
-      )}
-      {!isSmallScreen && <BooksFilter />}
       <Box
-        pr={['10%', '5%', '5%', '3%']}
-        pl={['10%', '5%', '5%', '3%']}
-        mb="100px"
+        position="fixed"
+        top={isSmallScreen ? '0' : '70px'}
+        zIndex="10"
+        width="full"
+      >
+        <BooksFilter />
+      </Box>
+      <Box
+        pr={['3%', '5%', '5%', '3%']}
+        pl={['3%', '5%', '5%', '3%']}
+        mb={{ base: '4em', md: '100px' }}
+        mt={{ base: '60px', md: '0' }}
       >
         <Box m="4">
           <Heading fontFamily="diodrum-bold !important">{category}</Heading>

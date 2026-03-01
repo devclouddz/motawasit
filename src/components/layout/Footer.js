@@ -19,11 +19,11 @@ import News from './FooterNewsLetter';
 
 export default function Footer() {
   return (
-    <Box pb="60px" px={{ base: '0', md: '10%' }} color="white" bg="black">
+    <Box pb={{ base: '100px', md: '60px' }} px={{ base: '1em', md: '10%' }} color="white" bg="black">
       <SimpleGrid
-        mb="100px"
+        mb={{ base: '2em', md: '100px' }}
         py="30px"
-        px={{ base: '1.5em', md: '30px' }}
+        px={{ base: '1em', md: '30px' }}
         columns={[1, 1, 3, 3]}
         spacing="8"
       >
@@ -285,7 +285,7 @@ export default function Footer() {
           </Flex>
         </Flex>
       </SimpleGrid>
-      <Flex mb="50px" justifyContent="center">
+      <Flex mb={{ base: '1em', md: '50px' }} justifyContent="center">
         <Box dir="ltr">©️ {new Date().getFullYear()} Almutawassit Books</Box>
       </Flex>
     </Box>

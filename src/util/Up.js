@@ -16,33 +16,21 @@ export default function Up() {
   return (
     <>
       {isSmallScreen && (
-        <Headroom
-          className="scroll-top"
+        <Box
+          onClick={scrollToTop}
           style={{
             position: 'fixed',
-            width: '100%',
-            zIndex: '90',
-            width: '45px',
-            height: '45px',
-            transform: 'translate3d(0px, 0px, 0px)',
-            transition: 'all .5s ease-in-out 0s',
-            top: 'unset',
-            bottom: '60px',
+            zIndex: 90,
+            bottom: '70px',
             left: '20px',
-            right: 'unset',
+            backgroundColor: '#151a23',
+            borderRadius: '50%',
+            padding: 10,
+            cursor: 'pointer',
           }}
         >
-          <Box
-            style={{
-              backgroundColor: '#151a23',
-              borderRadius: '50%',
-              padding: 10,
-              cursor: 'pointer',
-            }}
-          >
-            <FaChevronUp onClick={scrollToTop} fontSize="24px" color="white" />
-          </Box>
-        </Headroom>
+          <FaChevronUp fontSize="24px" color="white" />
+        </Box>
       )}
       {!isSmallScreen && (
         <Box

@@ -64,7 +64,7 @@ function Home({ getHome }) {
   };
 
   return (
-    <Box pr="10%" pl="10%" mt="100px" mb="100px">
+    <Box pr={{ base: '3%', md: '10%' }} pl={{ base: '3%', md: '10%' }} mt={{ base: '1em', md: '100px' }} mb={{ base: '4em', md: '100px' }}>
       <Helmet>
         <title>منشورات المتوسط</title>
       </Helmet>
