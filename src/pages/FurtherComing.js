@@ -22,11 +22,19 @@ export default function Books() {
       <Helmet>
         <title>قريبا من المتوسط</title>
       </Helmet>
-      <BooksFilter></BooksFilter>
       <Box
-        pr={['10%', '5%', '5%', '3%']}
-        pl={['10%', '5%', '5%', '3%']}
-        mb="100px"
+        position="fixed"
+        top={isSmallScreen ? '60px' : '70px'}
+        zIndex="10"
+        width="full"
+      >
+        <BooksFilter />
+      </Box>
+      <Box
+        pr={['3%', '5%', '5%', '3%']}
+        pl={['3%', '5%', '5%', '3%']}
+        mb={{ base: '4em', md: '100px' }}
+        mt={{ base: '60px', md: '0' }}
       >
         <Further furthercoming={furthercoming} translate={translate}></Further>
       </Box>

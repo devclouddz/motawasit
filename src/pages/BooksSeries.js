@@ -84,7 +84,7 @@ function CatBooks({ getBooksBySerie }) {
       </Helmet>
       <Box
         position="fixed"
-        top={isSmallScreen ? '0' : '70px'}
+        top={isSmallScreen ? '60px' : '70px'}
         zIndex="10"
         width="full"
       >

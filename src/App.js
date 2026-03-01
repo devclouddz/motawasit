@@ -72,9 +72,9 @@ function App(props) {
       <>
         <CSSReset />
         {isSmallScreen && (
-            <Headroom style={{ transition: 'all .5s ease-in-out 0s', zIndex: '2' }}>
+            <Box style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 20 }}>
               <TopNavbar />
-            </Headroom>
+            </Box>
         )}
         {!isSmallScreen && <TopNavbar />}
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { animateScroll as scroll } from 'react-scroll';
 
 class ScrollToTop extends Component {
   componentDidUpdate(prevProps) {
@@ -8,7 +7,7 @@ class ScrollToTop extends Component {
       this.props.location !== prevProps.location &&
       this.props.location.hash === ''
     ) {
-      scroll.scrollToTop();
+      window.scrollTo(0, 0);
     }
   }
 
