@@ -406,6 +406,137 @@ function Navbar({ getSeries, getCat }) {
           </Menu>
         </Flex>
       )}
+
+      {/* Mobile Drawer */}
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent bg={filter[colorMode]} color="white">
+          <DrawerHeader>
+            <Flex justifyContent="space-between" alignItems="center">
+              <Heading fontFamily="diodrum-med !important" fontSize="xl">
+                التصنيفات
+              </Heading>
+              <IconButton
+                icon={<FaTimes />}
+                onClick={onClose}
+                bg="transparent"
+                color="white"
+                _hover={{ bg: 'transparent' }}
+              />
+            </Flex>
+          </DrawerHeader>
+          <DrawerBody>
+            <NavLink
+              activeStyle={{
+                fontWeight: 'bold',
+                color: 'black',
+                backgroundColor: 'white',
+              }}
+              to="/featured?featured=1"
+              onClick={onClose}
+            >
+              <Text
+                fontWeight="bold"
+                p="3"
+                fontSize="xl"
+                fontFamily="diodrum-med !important"
+                _hover={{ bg: 'white', color: 'black' }}
+              >
+                آخر الإصدارات
+              </Text>
+            </NavLink>
+            <NavLink
+              activeStyle={{
+                fontWeight: 'bold',
+                color: 'black',
+                backgroundColor: 'white',
+              }}
+              to="/books"
+              onClick={onClose}
+            >
+              <Text
+                fontWeight="bold"
+                p="3"
+                fontSize="xl"
+                fontFamily="diodrum-med !important"
+                _hover={{ bg: 'white', color: 'black' }}
+              >
+                جميعها
+              </Text>
+            </NavLink>
+
+            <Accordion allowToggle>
+              <AccordionItem border="none">
+                <AccordionButton p="3" _hover={{ bg: 'white', color: 'black' }}>
+                  <Text
+                    flex="1"
+                    textAlign="right"
+                    fontWeight="bold"
+                    fontSize="xl"
+                    fontFamily="diodrum-med !important"
+                  >
+                    حسب الصنف
+                  </Text>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={4}>
+                  {cat &&
+                    cat.map(category => (
+                      <Link
+                        key={category.id}
+                        onClick={onClose}
+                        to={`/books_by_category?category=${category.key}`}
+                      >
+                        <Text
+                          p="2"
+                          fontSize="lg"
+                          fontFamily="diodrum-med !important"
+                          _hover={{ bg: 'white', color: 'black' }}
+                        >
+                          {category.name}
+                        </Text>
+                      </Link>
+                    ))}
+                </AccordionPanel>
+              </AccordionItem>
+
+              <AccordionItem border="none">
+                <AccordionButton p="3" _hover={{ bg: 'white', color: 'black' }}>
+                  <Text
+                    flex="1"
+                    textAlign="right"
+                    fontWeight="bold"
+                    fontSize="xl"
+                    fontFamily="diodrum-med !important"
+                  >
+                    حسب السلسلات
+                  </Text>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={4}>
+                  {data &&
+                    data.map(serie => (
+                      <Link
+                        key={serie.id}
+                        onClick={onClose}
+                        to={`/books_by_series?serie=${serie.name}`}
+                      >
+                        <Text
+                          p="2"
+                          fontSize="lg"
+                          fontFamily="diodrum-med !important"
+                          _hover={{ bg: 'white', color: 'black' }}
+                        >
+                          {serie.name}
+                        </Text>
+                      </Link>
+                    ))}
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Flex>
   );
 }
